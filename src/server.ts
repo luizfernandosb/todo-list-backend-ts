@@ -10,7 +10,7 @@ dotenv.config();
 const app = express();
 app.use(
   cors({
-    origin: "*", // Permitir todas as origens (você pode restringir a origem se necessário)
+    origin: "https://todo-list-ts-theta-ashen.vercel.app/", // Permitir todas as origens (você pode restringir a origem se necessário)
     methods: "GET, POST, PUT, PATCH, DELETE", // Métodos permitidos
     allowedHeaders: "Content-Type, Authorization, token", // Cabeçalhos permitidos
   })
