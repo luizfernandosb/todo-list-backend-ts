@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-
 import prisma from "../services/prisma";
-import { error } from "console";
 
 export const getTodos = async (req: Request, res: Response) => {
   try {
@@ -16,7 +14,9 @@ export const addTodo = async (req: Request, res: Response) => {
   const { text } = req.body;
   try {
     if (!text) {
-      throw new Error("Campo vazio, insira um nome para sua tarefa.");
+      res.status(406).json({
+        erro: "Texto de tarefa vazio ou não enviado!"
+      })
     }
     const newTodo = await prisma.todo.create({
       data: {
@@ -26,7 +26,6 @@ export const addTodo = async (req: Request, res: Response) => {
     });
     res.status(201).json(newTodo);
   } catch (error) {
-    // console.log(error)
     res.status(500).json({ error: "Erro ao adicionar nova tarefa." });
   }
 };
@@ -35,7 +34,12 @@ export const toggleComplete = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const todo = await prisma.todo.findUnique({ where: { id: Number(id) } });
-    if (!todo) throw new Error("Erro ao encontrar tarefa.")
+    if (!todo) {
+      res.status(404).json({
+        msg: "Erro ao encontrar tarefa."
+      })
+      return
+    }
     const updateTodo = await prisma.todo.update({
       where: { id: Number(id) },
       data: { completed: !todo.completed }
@@ -50,7 +54,7 @@ export const deleteTodo = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     await prisma.todo.delete({ where: { id: Number(id) } });
-    res.status(204).send();
+    res.sendStatus(204);
   } catch (error) {
     res.status(500).json({ erro: "Erro ao deletar tarefa." });
   }
