@@ -1,8 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import todoRoutes from "./routes/todoRoutes";
-import exp from "constants";
-const cors = require("cors");
+import cors from 'cors';
 
 dotenv.config();
 
@@ -17,7 +16,7 @@ app.use(
 
 
 app.use(express.json());
-app.use("/api/", todoRoutes);
+app.use("/api", todoRoutes);
 
 const PORT = process.env.PORT || 3000;
 
